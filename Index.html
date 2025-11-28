@@ -1,39 +1,236 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Creator Hub</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Creator Hub — Full Stack Demo</title>
+  <style>
+    /* ---------- BASIC STYLES ---------- */
+    :root {
+      --bg: #0b0f14;
+      --panel: #0f1720;
+      --muted: #98a0ad;
+      --accent: #6ee7b7;
+      --accent-2: #60a5fa;
+      --text: #e6eef6;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text);}
+    .container { max-width: 1100px; margin: 0 auto; padding: 18px; }
+    h1,h2,h3 { margin: 0 0 12px 0; }
+    p { margin: 6px 0; }
+    button { cursor:pointer; }
+
+    /* ---------- HEADER ---------- */
+    header { position: sticky; top:0; background: var(--panel); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1);}
+    header .brand { font-weight:bold; font-size:1.2rem; }
+    nav a { color: var(--muted); margin-right:12px; text-decoration:none; }
+    nav a:hover { color: var(--text); }
+
+    .primary-btn { background: linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#06202b; padding:10px 16px; border-radius:10px; font-weight:600; }
+    .primary-btn.disabled { opacity:0.5; pointer-events:none; }
+
+    .tool-section { margin-top:36px; padding:18px; background: var(--panel); border-radius: var(--radius); }
+    .tool-section textarea, .tool-section input, .tool-section select { width:100%; padding:8px; margin-bottom:12px; border-radius:8px; background:#071018; color:var(--text); border:1px solid rgba(255,255,255,0.1); }
+    .output-box { padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); margin-top:12px; min-height:100px; display:flex; align-items:center; justify-content:center; color:var(--muted);}
+    .progress-bar-wrapper { background: rgba(255,255,255,0.05); height:12px; border-radius:8px; overflow:hidden; margin:8px 0; }
+    .progress-bar { height:100%; width:0%; background: linear-gradient(90deg,var(--accent),var(--accent-2)); }
+    .creation-item { padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+    .creation-item span { font-size:0.85rem; color:var(--muted);}
+    footer { margin-top:36px; padding:18px; border-top:1px solid rgba(255,255,255,0.05); text-align:center; color:var(--muted);}
+  </style>
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo">AI Creator Hub</div>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#video-tool">Video</a>
-            <a href="#image-tool">Image</a>
-            <a href="#audio-tool">Audio</a>
-            <a href="#creations">My Creations</a>
-        </nav>
-    </header>
+  <header>
+    <div class="brand">AI Creator Hub</div>
+    <nav>
+      <a href="#video">Video</a>
+      <a href="#image">Image</a>
+      <a href="#audio">Audio</a>
+      <a href="#creations">My Creations</a>
+    </nav>
+    <button class="primary-btn" id="startBtn">Start Creating</button>
+  </header>
 
-```
-<section id="home" class="home-section">
-    <h1>Create Anything with AI</h1>
-    <p>Generate Long Videos, Stunning Images and AI Music with a Single Prompt.</p>
-    <button onclick="scrollToTools()">Start Creating</button>
-</section>
+  <main class="container">
+    <h1>Welcome to AI Creator Hub Demo</h1>
+    <p>Use the tools below to generate Video, Image, and Audio content. Mock API responses simulate real generation.</p>
 
-<section id="video-tool" class="tool-section">
-    <h2>AI Long Video Generator</h2>
-    <textarea id="videoPrompt" placeholder="Enter short prompt to generate long cinematic video..."></textarea>
-    <select id="resolution">
-        <option>1080p</option>
-        <option>4K</option>
+    <!-- VIDEO TOOL -->
+    <section id="video" class="tool-section">
+      <h2>Video Generator</h2>
+      <textarea id="videoPrompt" rows="3" placeholder="Enter short prompt for video"></textarea>
+      <button class="primary-btn" id="generateVideoBtn">Generate Video</button>
+      <div class="output-box" id="videoOutput">No video generated yet</div>
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="videoProgress"></div>
+      </div>
+      <p id="videoStatus">Status: Idle</p>
+      <button id="downloadVideoBtn" class="primary-btn disabled">Download Video</button>
+    </section>
+
+    <!-- IMAGE TOOL -->
+    <section id="image" class="tool-section">
+      <h2>Image Generator</h2>
+      <textarea id="imagePrompt" rows="3" placeholder="Enter prompt for image"></textarea>
+      <button class="primary-btn" id="generateImageBtn">Generate Image</button>
+      <div class="output-box" id="imageOutput">No image generated yet</div>
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="imageProgress"></div>
+      </div>
+      <p id="imageStatus">Status: Idle</p>
+      <button id="downloadImageBtn" class="primary-btn disabled">Download Image</button>
+    </section>
+
+    <!-- AUDIO TOOL -->
+    <section id="audio" class="tool-section">
+      <h2>Audio Generator</h2>
+      <textarea id="audioPrompt" rows="2" placeholder="Enter mood or prompt for audio"></textarea>
+      <button class="primary-btn" id="generateAudioBtn">Generate Audio</button>
+      <div class="output-box" id="audioOutput">No audio generated yet</div>
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="audioProgress"></div>
+      </div>
+      <p id="audioStatus">Status: Idle</p>
+      <button id="downloadAudioBtn" class="primary-btn disabled">Download Audio</button>
+    </section>
+
+    <!-- MY CREATIONS -->
+    <section id="creations" class="tool-section">
+      <h2>My Creations</h2>
+      <div id="creationsList"></div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> AI Creator Hub Demo
+  </footer>
+
+  <script>
+    // Set footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // -------- LocalStorage functions --------
+    function saveCreation(item){
+      const key = 'ai_creator_creations_demo';
+      const existing = JSON.parse(localStorage.getItem(key)||'[]');
+      existing.unshift(item);
+      localStorage.setItem(key, JSON.stringify(existing));
+      renderCreations();
+    }
+
+    function renderCreations(){
+      const key = 'ai_creator_creations_demo';
+      const existing = JSON.parse(localStorage.getItem(key)||'[]');
+      const list = document.getElementById('creationsList');
+      list.innerHTML = '';
+      existing.forEach(c=>{
+        const div = document.createElement('div');
+        div.className = 'creation-item';
+        div.innerHTML = `<span>${c.type.toUpperCase()} - ${c.prompt}</span><span>${new Date(c.timestamp).toLocaleTimeString()}</span>`;
+        div.addEventListener('click', ()=>{ window.open(c.url,'_blank'); });
+        list.appendChild(div);
+      });
+    }
+
+    // Load creations on start
+    renderCreations();
+
+    // -------- Mock API connect function --------
+    function generateContent(type, prompt){
+      // TODO: Replace this function with Real API call to your backend
+      return new Promise((resolve)=>{
+        setTimeout(()=>{
+          const mockUrl = 'data:'+type+'/mock;base64,AAAA';
+          resolve({url: mockUrl, type, prompt, timestamp: Date.now()});
+        }, type==='video'?60000:10000); // 60s for video, 10s for others
+      });
+    }
+
+    // -------- Video Generation --------
+    const videoBtn = document.getElementById('generateVideoBtn');
+    const videoOutput = document.getElementById('videoOutput');
+    const videoProgress = document.getElementById('videoProgress');
+    const videoStatus = document.getElementById('videoStatus');
+    const downloadVideoBtn = document.getElementById('downloadVideoBtn');
+
+    videoBtn.addEventListener('click', async ()=>{
+      const prompt = document.getElementById('videoPrompt').value.trim();
+      if(!prompt){ alert('Enter prompt'); return; }
+      videoStatus.textContent='Status: Generating Video... Please wait (60s)';
+      videoProgress.style.width='0%';
+      downloadVideoBtn.classList.add('disabled');
+
+      let progress=0;
+      const interval = setInterval(()=>{ progress+=2; if(progress>100) progress=100; videoProgress.style.width=progress+'%'; },1200);
+
+      const result = await generateContent('video', prompt);
+      clearInterval(interval);
+      videoStatus.textContent='Status: Video Creation Complete!';
+      videoOutput.textContent='Video Ready!';
+      downloadVideoBtn.href=result.url;
+      downloadVideoBtn.classList.remove('disabled');
+      saveCreation(result);
+    });
+
+    // -------- Image Generation --------
+    const imageBtn = document.getElementById('generateImageBtn');
+    const imageOutput = document.getElementById('imageOutput');
+    const imageProgress = document.getElementById('imageProgress');
+    const imageStatus = document.getElementById('imageStatus');
+    const downloadImageBtn = document.getElementById('downloadImageBtn');
+
+    imageBtn.addEventListener('click', async ()=>{
+      const prompt = document.getElementById('imagePrompt').value.trim();
+      if(!prompt){ alert('Enter prompt'); return; }
+      imageStatus.textContent='Status: Generating Image... Please wait (10s)';
+      imageProgress.style.width='0%';
+      downloadImageBtn.classList.add('disabled');
+
+      let progress=0;
+      const interval = setInterval(()=>{ progress+=10; if(progress>100) progress=100; imageProgress.style.width=progress+'%'; },1000);
+
+      const result = await generateContent('image', prompt);
+      clearInterval(interval);
+      imageStatus.textContent='Status: Image Creation Complete!';
+      imageOutput.textContent='Image Ready!';
+      downloadImageBtn.href=result.url;
+      downloadImageBtn.classList.remove('disabled');
+      saveCreation(result);
+    });
+
+    // -------- Audio Generation --------
+    const audioBtn = document.getElementById('generateAudioBtn');
+    const audioOutput = document.getElementById('audioOutput');
+    const audioProgress = document.getElementById('audioProgress');
+    const audioStatus = document.getElementById('audioStatus');
+    const downloadAudioBtn = document.getElementById('downloadAudioBtn');
+
+    audioBtn.addEventListener('click', async ()=>{
+      const prompt = document.getElementById('audioPrompt').value.trim();
+      if(!prompt){ alert('Enter prompt'); return; }
+      audioStatus.textContent='Status: Generating Audio... Please wait (10s)';
+      audioProgress.style.width='0%';
+      downloadAudioBtn.classList.add('disabled');
+
+      let progress=0;
+      const interval = setInterval(()=>{ progress+=10; if(progress>100) progress=100; audioProgress.style.width=progress+'%'; },1000);
+
+      const result = await generateContent('audio', prompt);
+      clearInterval(interval);
+      audioStatus.textContent='Status: Audio Creation Complete!';
+      audioOutput.textContent='Audio Ready!';
+      downloadAudioBtn.href=result.url;
+      downloadAudioBtn.classList.remove('disabled');
+      saveCreation(result);
+    });
+
+    // TODO: Add User Login System: Implement a login UI, and isAuthenticated() logic
+    // TODO: Integrate Firebase Backend: Replace localStorage with Firebase Realtime DB or Firestore
+  </script>
+</body>
+</html>
     </select>
     <select id="duration">
         <option>30 seconds</option>
