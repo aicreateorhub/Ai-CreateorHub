@@ -1,0 +1,194 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Creator Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">AI Creator Hub</div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#video-tool">Video</a>
+            <a href="#image-tool">Image</a>
+            <a href="#audio-tool">Audio</a>
+            <a href="#creations">My Creations</a>
+        </nav>
+    </header>
+
+```
+<section id="home" class="home-section">
+    <h1>Create Anything with AI</h1>
+    <p>Generate Long Videos, Stunning Images and AI Music with a Single Prompt.</p>
+    <button onclick="scrollToTools()">Start Creating</button>
+</section>
+
+<section id="video-tool" class="tool-section">
+    <h2>AI Long Video Generator</h2>
+    <textarea id="videoPrompt" placeholder="Enter short prompt to generate long cinematic video..."></textarea>
+    <select id="resolution">
+        <option>1080p</option>
+        <option>4K</option>
+    </select>
+    <select id="duration">
+        <option>30 seconds</option>
+        <option>45 seconds</option>
+        <option>60 seconds</option>
+    </select>
+    <select id="style">
+        <option>Cinematic</option>
+        <option>Anime</option>
+        <option>Photorealistic</option>
+    </select>
+    <button onclick="generateVideo()">Generate Video</button>
+    <p id="videoStatus"></p>
+    <button id="downloadVideo" disabled>Download Video</button>
+</section>
+
+<section id="image-tool" class="tool-section">
+    <h2>AI Image Generator</h2>
+    <textarea id="imagePrompt" placeholder="Enter prompt to generate image..."></textarea>
+    <button onclick="generateImage()">Generate Image</button>
+    <p id="imageStatus"></p>
+    <div id="imageResult"></div>
+</section>
+
+<section id="audio-tool" class="tool-section">
+    <h2>AI Music Generator</h2>
+    <textarea id="audioPrompt" placeholder="Enter mood or prompt for music..."></textarea>
+    <button onclick="generateAudio()">Generate Audio</button>
+    <p id="audioStatus"></p>
+    <div id="audioResult"></div>
+</section>
+
+<section id="creations" class="tool-section">
+    <h2>My Creations</h2>
+    <div id="creationsGallery" class="gallery"></div>
+</section>
+
+<script src="scripts.js"></script>
+```
+
+</body>
+</html>
+
+/* styles.css */
+body {
+margin: 0;
+background: #0d0d0d;
+color: #fff;
+font-family: Arial, sans-serif;
+}
+.navbar {
+position: sticky;
+top: 0;
+background: #111;
+padding: 15px;
+display: flex;
+justify-content: space-between;
+border-bottom: 1px solid #333;
+}
+.navbar a {
+color: #ccc;
+margin-left: 15px;
+text-decoration: none;
+}
+.home-section {
+text-align: center;
+padding: 100px 20px;
+}
+.tool-section {
+padding: 40px;
+}
+textarea {
+width: 100%;
+padding: 10px;
+background: #222;
+color: #fff;
+border: 1px solid #444;
+margin-bottom: 10px;
+}
+button {
+padding: 10px 20px;
+background: #007bff;
+border: none;
+border-radius: 5px;
+color: white;
+cursor: pointer;
+}
+button:disabled {
+background: #555;
+cursor: not-allowed;
+}
+.gallery {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 15px;
+}
+
+// scripts.js
+function scrollToTools(){
+document.getElementById("video-tool").scrollIntoView({behavior:'smooth'});
+}
+
+function generateVideo() {
+/* REAL API CALL EXAMPLE
+Sora2API.createVideo({prompt, resolution, duration, style, api_key});
+*/
+
+```
+const status = document.getElementById("videoStatus");
+const downloadBtn = document.getElementById("downloadVideo");
+
+status.innerText = "Generating Video... Please Wait (60 seconds)";
+downloadBtn.disabled = true;
+
+setTimeout(() => {
+    status.innerText = "Video Creation Complete! Download Now.";
+    downloadBtn.disabled = false;
+    downloadBtn.onclick = () => window.location.href = "#";
+}, 60000);
+```
+
+}
+
+function generateImage(){
+/* REAL API CALL EXAMPLE
+ImageAPI.generate({prompt, api_key});
+*/
+
+```
+const status = document.getElementById("imageStatus");
+const prompt = document.getElementById("imagePrompt").value;
+status.innerText = "Generating Image... Please Wait (7 seconds)";
+
+setTimeout(() => {
+    status.innerText = "Image Ready!";
+    document.getElementById("imageResult").innerHTML = `<p>Dummy image generated for: ${prompt}</p>`;
+}, 7000);
+```
+
+}
+
+function generateAudio(){
+/* REAL API CALL EXAMPLE
+AudioAPI.generate({prompt, api_key});
+*/
+
+```
+const status = document.getElementById("audioStatus");
+const prompt = document.getElementById("audioPrompt").value;
+status.innerText = "Generating Music... Please Wait (8 seconds)";
+
+setTimeout(() => {
+    status.innerText = "Music Ready!";
+    document.getElementById("audioResult").innerHTML = `<p>Dummy music generated for: ${prompt}</p>`;
+}, 8000);
+```
+
+}
